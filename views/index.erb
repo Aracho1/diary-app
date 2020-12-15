@@ -1,5 +1,14 @@
 <h1>Diary</h1>
-
+<% @diary.titles.each do |title| %>
+<form action="/entry" method="get">
+  <input type="submit" name="title" value="<%= title %>">
+</form>
+<% end %>
+<h1>Add a new entry</h1>
 <form action="/add" method="post">
-  <button name="add" value="add">Add an entry</button>
+  <label for="add">Title</label>
+  <br><textarea name="title" id="title" required cols="50"></textarea>
+  <br><label for="add">Body</label>
+  <br><textarea id="entry" name="entry" id="entry" rows="5" cols="50"></textarea>
+  <br><input type="submit" value="Add">
 </form>

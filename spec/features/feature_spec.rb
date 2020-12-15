@@ -8,6 +8,16 @@
 feature "adding diary entry" do
   scenario "user can add diary entry" do
     visit '/'
-    expect(page).to have_content('Add an entry')
+    fill_in 'title', with:'today'
+    fill_in 'entry', with:'I was happy'
+    click_button('Add')
+    expect(page).to have_content('today')
+    expect(page).to have_content('I was happy')
   end
+
+  scenario "user can see all titles" do
+    visit '/'
+    fill_in 'title', with:'today'
+    fill_in 'entry', with:'I was happy'
+    click_button('Add')
 end
