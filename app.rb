@@ -4,12 +4,12 @@ require './database_connection_setup'
 
 class DiaryApp < Sinatra::Base
 
-  before do
-    @diary = Diary.instance
-  end
+  # before do
+  #   @diary = Diary.instance
+  # end
 
   get '/' do
-    @diary = Diary
+    @diary = Diary.all
     erb :index
   end
 
@@ -19,9 +19,9 @@ class DiaryApp < Sinatra::Base
   end
 
   get '/entry' do
-    p params[:title]
-    p @diary.find_entry('today')
+    @title = @diary.find_title(params[:title])
     @entry = @diary.find_entry(params[:title])
     erb :entry
   end
+
 end

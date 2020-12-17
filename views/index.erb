@@ -1,8 +1,12 @@
 <h1>Diary</h1>
-<% @diary.titles.each do |title| %>
-<form action="/entry" method="get">
-  <input type="submit" name="title" value="<%= title %>">
-</form>
+<% @diary.each do |item| %>
+<li>
+  <a href="/entry">
+    <%= item.title %>
+  </a>
+</li>
+<%# <form action="/entry" method="get">
+  <input type="submit" name="title" value="<%= title %>
 <% end %>
 <h1>Add a new entry</h1>
 <form action="/add" method="post">
