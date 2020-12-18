@@ -40,7 +40,7 @@ class Diary
   def comments(diary_id: )
     connection = PG.connect(dbname: 'diary')
     result = connection.query("SELECT * FROM comments where diary_id=#{diary_id}")
-    result.map{ |comment| Comment.new(id: result[0]['id'], comment: result[0]['comment'], diary_id: result[0]['diary_id'])}
+    result.map{ |comment| Comment.new(id: comment['id'], comment: comment['comment'], diary_id: comment['diary_id'])}
   end
 
   def self.add_comments(diary_id: , comment: )
