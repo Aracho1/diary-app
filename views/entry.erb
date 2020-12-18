@@ -1,6 +1,15 @@
 <h1><%= @diary.title %></h1>
 <%= @diary.entry %>
 
+<form action="/<%= @diary.id %>/edit" method="get">
+    <input type="submit" value="edit">
+  </form>
+
+  <form action="/<%= @diary.id %>/delete" method="post">
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="submit" value="delete">
+  </form>
+
 <h4>Comments</h4>
 <ul>
 
@@ -17,3 +26,6 @@
   <input type="submit" value="Submit">
 </form>
 
+<form action="/" method="get">
+    <input type="submit" value="Back to Main Page">
+  </form>
