@@ -1,18 +1,18 @@
 <h1>Diary</h1>
 <% @diary.each do |item| %>
 <li>
-  <a href="/entry">
+  <a href="/<%= item.id %>">
     <%= item.title %>
   </a>
+  <form action="/<%= item.id %>/edit" method="get">
+    <input type="submit" value="edit">
+  </form>
+  <form action="/<%= item.id %>/delete" method="post">
+    <input type="hidden" name="_method" value="DELETE">
+    <input type="submit" value="delete">
+  </form>
 </li>
-<%# <form action="/entry" method="get">
-  <input type="submit" name="title" value="<%= title %>
 <% end %>
-<h1>Add a new entry</h1>
-<form action="/add" method="post">
-  <label for="add">Title</label>
-  <br><textarea name="title" id="title" required cols="50"></textarea>
-  <br><label for="add">Body</label>
-  <br><textarea id="entry" name="entry" id="entry" rows="5" cols="50"></textarea>
-  <br><input type="submit" value="Add">
-</form>
+
+<form action="/new" method="get">
+<input type="submit" value="Add">

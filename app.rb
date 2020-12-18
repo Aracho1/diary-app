@@ -1,27 +1,47 @@
 require 'sinatra/base'
 require './lib/diary'
+require './lib/comment'
 require './database_connection_setup'
 
 class DiaryApp < Sinatra::Base
-
-  # before do
-  #   @diary = Diary.instance
-  # end
+  enable :sessions, :method_override
 
   get '/' do
     @diary = Diary.all
     erb :index
   end
 
+  get '/new' do
+    erb :new
+  end
+
   post '/add' do
-    @diary.add(params[:title], params[:entry])
+    Diary.add(title: params[:title], entry: params[:entry])
     redirect '/'
   end
 
-  get '/entry' do
-    @title = @diary.find_title(params[:title])
-    @entry = @diary.find_entry(params[:title])
+  get '/:id' do
+    @diary = Diary.find(id: params[:id])
     erb :entry
   end
 
+  get '/:id/edit' do
+    @diary = Diary.find(id: params[:id])
+    erb :edit
+  end
+
+  patch '/:id' do
+    Diary.edit(id: params[:id], title: params[:title], entry: params[:entry])
+    redirect '/'
+  end
+
+  patch '/:id/comment' do
+    Diary.add_comments(diary_id: params[:id], comment: params[:comment])
+    redirect('/')
+  end
+
+  delete '/:id/delete' do
+    Diary.delete(id: params[:id])
+    redirect '/'
+  end
 end

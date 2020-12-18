@@ -1,7 +1,8 @@
 require_relative './database_connection'
+require_relative './comment'
 
 class Diary
-  attr_reader :id, :title, :entry
+  attr_reader :id, :title, :entry, :comments
 
   def initialize(id:, title:, entry:)
     @id = id
@@ -9,11 +10,7 @@ class Diary
     @entry = entry
   end
 
-  # def self.instance
-  #   @diary ||= Diary.new
-  # end
-
-  def add(title:, entry:)
+  def self.add(title:, entry:)
     result = DatabaseConnection.query("INSERT INTO diary(title, entry) VALUES ('#{title}', '#{entry}') RETURNING id, title, entry;")
     Diary.new(id: result[0]['id'], title: result[0]['title'], entry: result[0]['entry'])
   end
@@ -23,16 +20,33 @@ class Diary
     result.map { |item| Diary.new(id: item['id'], title: item['title'], entry: item['entry'])}
   end
 
-  def find_title(title)
-    result = DatabaseConnection.query("SELECT title FROM diary WHERE title='#{title}';")
-    result[0]['title']
-  end
-  
-  def find_entry(title)
-    result = DatabaseConnection.query("SELECT entry FROM diary WHERE title='#{title}';")
-    result[0]['entry']
+  def self.find(id:)
+    connection = PG.connect(dbname: 'diary')
+    result = connection.exec("SELECT * FROM diary WHERE id=#{id}") 
+    Diary.new(id: result[0]['id'], title: result[0]['title'], entry:result[0]['entry'])
   end
 
-  def edit
+  def self.edit(id: , title: , entry: )
+    connection = PG.connect(dbname: 'diary')
+    result = connection.exec("UPDATE diary SET title='#{title}', entry='#{entry}' WHERE id=#{id} RETURNING id, title, entry;")
+    Diary.new(id: result[0]['id'], title: result[0]['title'], entry: result[0]['entry'])
   end
+
+  def self.delete(id:)
+    connection = PG.connect(dbname: 'diary')
+    result = connection.exec("DELETE FROM diary WHERE id=#{id}")
+  end
+
+  def comments(diary_id: )
+    connection = PG.connect(dbname: 'diary')
+    result = connection.query("SELECT * FROM comments where diary_id=#{diary_id}")
+    result.map{ |comment| Comment.new(id: result[0]['id'], comment: result[0]['comment'], diary_id: result[0]['diary_id'])}
+  end
+
+  def self.add_comments(diary_id: , comment: )
+    connection = PG.connect(dbname: 'diary')
+    result = connection.query("INSERT INTO comments(diary_id, comment) VALUES('#{diary_id}', '#{comment}') RETURNING id, comment, diary_id")
+    Comment.new(id: result[0]['id'], comment: result[0]['comment'], diary_id:result[0]['diary_id'])
+  end
+
 end

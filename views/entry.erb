@@ -1,3 +1,19 @@
-<h1><%= @title %></h1>
-<%= @entry %>
+<h1><%= @diary.title %></h1>
+<%= @diary.entry %>
+
+<h4>Comments</h4>
+<ul>
+
+<% @diary.comments(diary_id: @diary.id).each do |item| %>
+  <li><%= item.comment %></li>
+<% end %>
+
+</ul>
+
+<h4>Leave a comment</h4>
+<form action="/<%= @diary.id %>/comment" method="post">
+  <input type="hidden" name="_method" value="PATCH">
+  <input type="text" name="comment">
+  <input type="submit" value="Submit">
+</form>
 
